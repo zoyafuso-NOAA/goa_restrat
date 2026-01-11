@@ -13,8 +13,6 @@ library(akgfmaps) #devtools::install_github("afsc-gap-products/akgfmaps", build_
 library(survey) # install.packages("survey)
 library(cowplot)
 
-## Survey change from x strata to y strata. From x number of stations to y number of stations. Citation for unbiasness. 
-
 ## Connect to Oracle either using AFSC credentials
 chl <- gapindex::get_connected(db = "AFSC")
 
@@ -92,49 +90,6 @@ original_est <- RODBC::sqlQuery(
   order by YEAR
   ")
 ) 
-
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##  Naive estimator: Reassign the 2025 survey onto the historical stations 
-##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# naive_data <- gp_data
-# naive_data$haul <- 
-#   merge(x = subset(x = naive_data$haul, select = -STRATUM),
-#         y = as.data.frame(x = goa_stations_hist)[, c("HAULJOIN", "STRATUM")],
-#         by = "HAULJOIN")
-# naive_data$survey$DESIGN_YEAR <- 
-#   naive_data$survey_design$DESIGN_YEAR <- 
-#   naive_data$cruise$DESIGN_YEAR <- 2025
-# naive_data$strata <- gp_data_2025$strata
-# naive_data$stratum_groups <- gp_data_2025$stratum_groups
-# naive_data$subarea <- gp_data_2025$subarea
-# 
-# naive_cpue <- 
-#   merge(x = subset(x = gp_cpue, select = -STRATUM),
-#         y = as.data.frame(x = goa_stations_hist)[, c("HAULJOIN", "STRATUM")],
-#         by = "HAULJOIN")
-# naive_cpue$DESIGN_YEAR <- 2025
-# 
-# naive_biomass_stratum <- 
-#   gapindex::calc_biomass_stratum(gapdata = naive_data, 
-#                                  cpue = naive_cpue)
-# naive_biomass_region <- 
-#   gapindex::calc_biomass_subarea(gapdata = naive_data, 
-#                                  biomass_stratum = naive_biomass_stratum) |>
-#   subset(subset = AREA_ID == 99903) |> 
-#   transform(
-#     EST_TYPE = 'NAIVE',
-#     BIOMASS_LCI = BIOMASS_MT - 1.96 * sqrt(x = BIOMASS_VAR),
-#     BIOMASS_HCI = BIOMASS_MT + 1.96 * sqrt(x = BIOMASS_VAR),
-#     POPULATION_LCI = POPULATION_COUNT - 1.96 * sqrt(x = POPULATION_VAR),
-#     POPULATION_HCI = POPULATION_COUNT + 1.96 * sqrt(x = POPULATION_VAR)
-#   ) |>
-#   transform(
-#     BIOMASS_LCI = ifelse(test = BIOMASS_LCI < 0, 0, BIOMASS_LCI),
-#     POPULATION_LCI = ifelse(test = POPULATION_LCI < 0, 0, POPULATION_LCI)
-#   ) |>
-#   subset( select = c(YEAR, SPECIES_CODE, EST_TYPE,
-#                      BIOMASS_MT, BIOMASS_LCI, BIOMASS_HCI,
-#                      POPULATION_COUNT, POPULATION_LCI, POPULATION_HCI) )
 
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ##  Assign original and reclassified strata along with the stratum weights
