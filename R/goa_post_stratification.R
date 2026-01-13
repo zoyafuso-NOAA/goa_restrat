@@ -12,6 +12,8 @@ library(gapindex) #devtools::install_github("afsc-gap-products/gapindex")
 library(akgfmaps) #devtools::install_github("afsc-gap-products/akgfmaps", build_vignettes = TRUE)
 library(survey) # install.packages("survey)
 library(cowplot)
+library(ggplot2)
+library(dplyr)
 
 ## Connect to Oracle either using AFSC credentials
 chl <- gapindex::get_connected(db = "AFSC")
